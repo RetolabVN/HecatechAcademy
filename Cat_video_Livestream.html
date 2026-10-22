@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đào tạo Buổi 3 · Workflow Livestream và chữa video cắt live</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap">
+<style>
+:root{
+  --bg:#eef1f4;--card:#fff;--ink:#16202a;--muted:#56636f;--line:#d3dae1;--soft:#e4e9ee;
+  --accent:#d9480f;--accent-bg:#fdebe2;--gold:#b86e00;--gold-bg:#fbefdc;--ok:#1c7552;--ok-bg:#e3f2eb;--cl:#2b5fc4;--cl-bg:#e5ecfa;
+  --f:"Be Vietnam Pro","Segoe UI",system-ui,-apple-system,sans-serif;--m:ui-monospace,Consolas,"SF Mono",monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --bg:#11161b;--card:#19212a;--ink:#e5ebf1;--muted:#9aa7b3;--line:#2c3743;--soft:#222c36;
+  --accent:#ff8a4c;--accent-bg:#3a2016;--gold:#f0b04e;--gold-bg:#352711;--ok:#5cc79b;--ok-bg:#16302a;--cl:#7ea3f0;--cl-bg:#182640}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --bg:#11161b;--card:#19212a;--ink:#e5ebf1;--muted:#9aa7b3;--line:#2c3743;--soft:#222c36;
+  --accent:#ff8a4c;--accent-bg:#3a2016;--gold:#f0b04e;--gold-bg:#352711;--ok:#5cc79b;--ok-bg:#16302a;--cl:#7ea3f0;--cl-bg:#182640}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--f);padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{margin:0;line-height:1.25;text-wrap:balance}
+h1{font-size:clamp(28px,4.6vw,40px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(20px,3vw,26px);font-weight:800}
+h3{font-size:17px;font-weight:700}
+p{margin:0}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lead{color:var(--muted);font-size:17px;max-width:64ch}
+header,section{display:flex;flex-direction:column;gap:12px}
+.buoi{display:flex;flex-direction:column;gap:32px}
+section{scroll-margin-top:60px}
+.mini{display:flex;flex-wrap:wrap;gap:8px;position:sticky;top:0;background:var(--bg);padding-block:8px;z-index:3}
+.mini a{color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--card);padding:5px 11px;border-radius:999px;font-weight:600;font-size:13px}
+.mini a:hover,.mini a:focus-visible{border-color:var(--accent);outline:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.card p,.card li{color:var(--muted);font-size:15px}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.card b{font-size:16px}
+.card.hot{border-color:var(--accent);background:var(--accent-bg)}
+.card.hot p,.card.hot li{color:var(--ink)}
+.num{font-family:var(--m);font-size:13px;color:var(--accent)}
+.so-do{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;align-items:center}
+.so-do img{width:100%;max-width:720px;height:auto;display:block;border-radius:8px}
+.so-do p{color:var(--muted);font-size:14px;max-width:64ch}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:640px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+thead th{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--soft)}
+tbody tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;width:24%}
+tr.nhom td{background:var(--soft);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);padding-block:6px}
+tr.cong td{background:var(--accent-bg)}
+.chip{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.c-may{color:var(--ok);background:var(--ok-bg)}.c-cl{color:var(--cl);background:var(--cl-bg)}.c-ng{color:var(--accent);background:var(--accent-bg)}
+ul.rules{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.warn{border-left:4px solid var(--accent);background:var(--accent-bg);border-radius:0 10px 10px 0;padding:12px 16px;font-size:15px}
+.note{border-left:4px solid var(--gold);background:var(--gold-bg);border-radius:0 10px 10px 0;padding:12px 16px;font-size:15px}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+details+details{margin-top:6px}
+summary{cursor:pointer;font-weight:600}
+details p{margin-top:6px;color:var(--muted);font-size:15px}
+.check{display:flex;flex-direction:column;gap:6px}
+.check label{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.check input{margin-top:4px;width:18px;height:18px;accent-color:var(--ok);flex:none}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+code{font-family:var(--m);font-size:13.5px;background:var(--soft);padding:1px 6px;border-radius:5px}
+footer{color:var(--muted);font-size:13px}
+.tiep{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--ink);background:var(--card);border:1.5px solid var(--accent);border-radius:12px;padding:14px 16px}
+.tiep small{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.tiep b{font-size:18px}.tiep span{color:var(--muted);font-size:15px}
+.tiep:hover,.tiep:focus-visible{background:var(--accent-bg);outline:none}
+@media print{.mini{display:none}}
+.note a{color:var(--accent);font-weight:600}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{flex:1 1 260px;display:flex;flex-direction:column;gap:2px;text-align:left;cursor:pointer;
+  background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;font:inherit;color:var(--muted)}
+.tab small{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.tab b{font-size:17px;color:var(--ink)}
+.tab:hover,.tab:focus-visible{border-color:var(--accent);outline:none}
+.tab.on{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+.panel{display:flex;flex-direction:column;gap:28px}
+html.js .panel:not(.on){display:none}
+.phan{display:flex;flex-direction:column;gap:4px;scroll-margin-top:60px}
+.phan .lab{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.phan h2{font-size:clamp(24px,3.6vw,32px)}
+.phan p{color:var(--muted);font-size:16px;max-width:64ch}
+@media print{html.js .panel:not(.on){display:flex}.tabs{display:none}}
+</style>
+<script>document.documentElement.className+=" js"</script>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Tài liệu đào tạo · Buổi 3 · 21/10/2026 · Framework Livestream → video bán hàng</p>
+  <h1>Workflow Livestream và chữa video cắt live</h1>
+  <p class="lead">Biến 1 buổi live dài thành nhiều video ngắn dọc. Máy và Claude làm phần lớn việc; người chặn ở 3 cổng.
+  Mục tiêu: 1 buổi live 3 giờ → tối thiểu 15–20 video.</p>
+  <p class="note">Theo bản repo mới (Framework Livestream bản v1, 20/10/2026), bổ sung lỗi chữa trực tiếp ở buổi 21/10.
+  Trước khi làm: cập nhật repo mới, chạy <code>node scripts/kit/kiem-framework.mjs livestream</code>, báo ✅ mới dùng.
+  Bạn chưa cài thì nhờ bạn đã cài hỗ trợ.</p>
+</header>
+
+<div class="tabs" role="tablist" aria-label="Chọn phần">
+  <button type="button" class="tab on" role="tab" id="tab-1" aria-controls="phan-1" aria-selected="true">
+    <small>Phần 1</small><b>Hướng dẫn workflow Livestream</b></button>
+  <button type="button" class="tab" role="tab" id="tab-2" aria-controls="phan-2" aria-selected="false">
+    <small>Phần 2</small><b>Chữa video cắt live</b></button>
+</div>
+
+<!-- ============ PHẦN 1 ============ -->
+<div class="panel on" id="phan-1" role="tabpanel" aria-labelledby="tab-1">
+
+<div class="phan">
+  <span class="lab">Phần 1</span>
+  <h2>Hướng dẫn workflow Livestream</h2>
+  <p>Đọc trước khi chạy lô đầu: 10 bước, 3 cổng duyệt, đầu ra của một lô, luật cứng máy chặn.</p>
+</div>
+
+<nav class="mini" aria-label="Mục phần 1">
+  <a href="#p1-muc-tieu">Mục tiêu</a><a href="#p1-so-do">Sơ đồ</a><a href="#p1-kien-thuc">Kiến thức</a>
+  <a href="#p1-quy-trinh">Quy trình</a><a href="#p1-bai-tap">Bài tập</a><a href="#p1-tu-kiem">Tự kiểm tra</a><a href="#p1-checklist">Checklist</a>
+</nav>
+
+<section id="p1-muc-tieu">
+  <h2>Mục tiêu và chuẩn bị</h2>
+  <div class="grid">
+    <div class="card"><span class="num">Học xong phải</span>
+      <ul>
+        <li>Nắm đủ 10 bước và 3 cổng duyệt</li>
+        <li>Duyệt kỹ 3 video thử ở Cổng 2</li>
+        <li>Tự chạy lô thử: đoạn live ~30 phút → ít nhất 1 video hoàn chỉnh</li>
+        <li>Xử lý 3 lỗi top: hình đơn điệu, thiếu CTA, giọng bị lạc</li>
+      </ul></div>
+    <div class="card"><span class="num">Chuẩn bị</span>
+      <ul>
+        <li>Máy đã lên repo mới</li>
+        <li>File live mp4 (tải về máy)</li>
+        <li>Tên shop, logo</li>
+        <li>Hồ sơ thông tin sản phẩm</li>
+      </ul></div>
+  </div>
+</section>
+
+<section id="p1-so-do">
+  <h2>Sơ đồ workflow</h2>
+  <div class="so-do">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NjAgMTUwMCIgd2lkdGg9Ijk2MCIgaGVpZ2h0PSIxNTAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCBkIj4KPHRpdGxlIGlkPSJ0Ij5Xb3JrZmxvdyBMaXZlc3RyZWFtIOKGkiB2aWRlbyBiw6FuIGjDoG5nPC90aXRsZT4KPGRlc2MgaWQ9ImQiPkZyYW1ld29yayBMaXZlc3RyZWFtIGLhuqNuIHYxICgyMC8xMC8yMDI2KTogMTAgYsaw4bubYywgMyBj4buVbmcgbmfGsOG7nWkgZHV54buHdCwgdsOybmcgc+G7rWEga2hpIGNoxrBhIMSR4bqhdCwgbmjDoW5oIG5ndeG7k24ga2jDtG5nIHBo4bqjaSBsaXZlLCDEkeG6p3UgcmEgdsOgIGx14bqtdCBj4bupbmcgbcOheSBjaOG6t24uPC9kZXNjPgo8c3R5bGU+CiAgLmJne2ZpbGw6I2VlZjFmNH0uY2FyZHtmaWxsOiNmZmY7c3Ryb2tlOiNkM2RhZTE7c3Ryb2tlLXdpZHRoOjEuNX0KICAuaW5re2ZpbGw6IzE2MjAyYX0ubXV0ZWR7ZmlsbDojNTY2MzZmfQogIC5tYXl7ZmlsbDojMWM3NTUyfS5tYXktYmd7ZmlsbDojZTNmMmVifQogIC5jbHtmaWxsOiMyYjVmYzR9LmNsLWJne2ZpbGw6I2U1ZWNmYX0KICAubmd7ZmlsbDojZDk0ODBmfS5uZy1iZ3tmaWxsOiNmZGViZTJ9CiAgLmdhdGV7ZmlsbDojZmRlYmUyO3N0cm9rZTojZDk0ODBmO3N0cm9rZS13aWR0aDoyfQogIC5udW17ZmlsbDojMTYyMDJhfS5udW0tdHtmaWxsOiNmZmZ9CiAgLmxpbmV7c3Ryb2tlOiM1NjYzNmY7c3Ryb2tlLXdpZHRoOjI7ZmlsbDpub25lfQogIC5sb29we3N0cm9rZTojYzkyYTJhO3N0cm9rZS13aWR0aDoyO2ZpbGw6bm9uZTtzdHJva2UtZGFzaGFycmF5OjYgNX0KICAubG9vcC10e2ZpbGw6I2M5MmEyYX0KICAuYnJhbmNoe3N0cm9rZTojNTY2MzZmO3N0cm9rZS13aWR0aDoyO2ZpbGw6bm9uZTtzdHJva2UtZGFzaGFycmF5OjMgNX0KICAuaGVhZC1pbmt7ZmlsbDojNTY2MzZmfS5oZWFkLXJlZHtmaWxsOiNjOTJhMmF9CiAgdGV4dHtmb250LWZhbWlseToiQmUgVmlldG5hbSBQcm8iLCJTZWdvZSBVSSIsQXJpYWwsc2Fucy1zZXJpZn0KICAuaDF7Zm9udC1zaXplOjI4cHg7Zm9udC13ZWlnaHQ6ODAwfS5zdWJ7Zm9udC1zaXplOjE0cHh9CiAgLnR0e2ZvbnQtc2l6ZToxNXB4O2ZvbnQtd2VpZ2h0OjcwMH0uZHR7Zm9udC1zaXplOjEzcHh9CiAgLmxhYntmb250LXNpemU6MTFweDtmb250LXdlaWdodDo3MDA7bGV0dGVyLXNwYWNpbmc6LjA2ZW19CiAgLnBpbGx7Zm9udC1zaXplOjExcHg7Zm9udC13ZWlnaHQ6NzAwO2xldHRlci1zcGFjaW5nOi4wNGVtfQogIC5zbWFsbHtmb250LXNpemU6MTJweH0KICBAbWVkaWEgKHByZWZlcnMtY29sb3Itc2NoZW1lOmRhcmspewogICAgLmJne2ZpbGw6IzExMTYxYn0uY2FyZHtmaWxsOiMxOTIxMmE7c3Ryb2tlOiMyYzM3NDN9CiAgICAuaW5re2ZpbGw6I2U1ZWJmMX0ubXV0ZWR7ZmlsbDojOWFhN2IzfQogICAgLm1heXtmaWxsOiM1Y2M3OWJ9Lm1heS1iZ3tmaWxsOiMxNjMwMmF9CiAgICAuY2x7ZmlsbDojN2VhM2YwfS5jbC1iZ3tmaWxsOiMxODI2NDB9CiAgICAubmd7ZmlsbDojZmY4YTRjfS5uZy1iZ3tmaWxsOiMzYTIwMTZ9CiAgICAuZ2F0ZXtmaWxsOiMzYTIwMTY7c3Ryb2tlOiNmZjhhNGN9CiAgICAubnVte2ZpbGw6I2U1ZWJmMX0ubnVtLXR7ZmlsbDojMTExNjFifQogICAgLmxpbmV7c3Ryb2tlOiM5YWE3YjN9LmhlYWQtaW5re2ZpbGw6IzlhYTdiM30KICAgIC5sb29we3N0cm9rZTojZmY2YjZifS5sb29wLXR7ZmlsbDojZmY2YjZifS5oZWFkLXJlZHtmaWxsOiNmZjZiNmJ9CiAgICAuYnJhbmNoe3N0cm9rZTojOWFhN2IzfQogIH0KPC9zdHlsZT4KPGRlZnM+CiAgPG1hcmtlciBpZD0iYSIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSI5IiByZWZZPSI1IiBtYXJrZXJXaWR0aD0iNyIgbWFya2VySGVpZ2h0PSI3IiBvcmllbnQ9ImF1dG8tc3RhcnQtcmV2ZXJzZSI+PHBhdGggY2xhc3M9ImhlYWQtaW5rIiBkPSJNMCAwTDEwIDVMMCAxMHoiLz48L21hcmtlcj4KICA8bWFya2VyIGlkPSJyIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlg9IjkiIHJlZlk9IjUiIG1hcmtlcldpZHRoPSI3IiBtYXJrZXJIZWlnaHQ9IjciIG9yaWVudD0iYXV0by1zdGFydC1yZXZlcnNlIj48cGF0aCBjbGFzcz0iaGVhZC1yZWQiIGQ9Ik0wIDBMMTAgNUwwIDEweiIvPjwvbWFya2VyPgo8L2RlZnM+Cgo8cmVjdCBjbGFzcz0iYmciIHdpZHRoPSI5NjAiIGhlaWdodD0iMTUwMCIvPgoKPCEtLSBUacOqdSDEkeG7gSAtLT4KPHRleHQgY2xhc3M9ImgxIGluayIgeD0iNDAiIHk9IjUyIj5Xb3JrZmxvdyDCtyBMaXZlc3RyZWFtIOKGkiB2aWRlbyBiw6FuIGjDoG5nPC90ZXh0Pgo8dGV4dCBjbGFzcz0ic3ViIG11dGVkIiB4PSI0MCIgeT0iNzgiPkZyYW1ld29yayBMaXZlc3RyZWFtIGLhuqNuIHYxIMK3IDIwLzEwLzIwMjYgwrcgdGhlbyByZXBvIG3hu5tpIMK3IDEgYnXhu5VpIGxpdmUgZMOgaSDihpIgbmhp4buBdSB2aWRlbyBuZ+G6r24gZOG7jWM8L3RleHQ+Cgo8IS0tIENow7ogdGjDrWNoIC0tPgo8cmVjdCBjbGFzcz0ibWF5LWJnIiB4PSI0MCIgeT0iOTQiIHdpZHRoPSI1OCIgaGVpZ2h0PSIyMCIgcng9IjEwIi8+PHRleHQgY2xhc3M9InBpbGwgbWF5IiB4PSI2OSIgeT0iMTA4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Nw4FZPC90ZXh0Pgo8cmVjdCBjbGFzcz0iY2wtYmciIHg9IjEwNiIgeT0iOTQiIHdpZHRoPSI3MiIgaGVpZ2h0PSIyMCIgcng9IjEwIi8+PHRleHQgY2xhc3M9InBpbGwgY2wiIHg9IjE0MiIgeT0iMTA4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DTEFVREU8L3RleHQ+CjxyZWN0IGNsYXNzPSJuZy1iZyIgeD0iMTg2IiB5PSI5NCIgd2lkdGg9IjEwNCIgaGVpZ2h0PSIyMCIgcng9IjEwIi8+PHRleHQgY2xhc3M9InBpbGwgbmciIHg9IjIzOCIgeT0iMTA4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5OR8av4bucSSBEVVnhu4ZUPC90ZXh0Pgo8cGF0aCBjbGFzcz0ibG9vcCIgZD0iTTMwMiAxMDRIMzM2IiBtYXJrZXItZW5kPSJ1cmwoI3IpIi8+PHRleHQgY2xhc3M9InNtYWxsIGxvb3AtdCIgeD0iMzQ0IiB5PSIxMDgiPmNoxrBhIMSR4bqhdCDihpIgc+G7rWE8L3RleHQ+Cgo8IS0tIEPhu61hIHbDoG8gLS0+CjxyZWN0IGNsYXNzPSJjYXJkIiB4PSIyMDAiIHk9IjEyNCIgd2lkdGg9IjU2MCIgaGVpZ2h0PSI2MCIgcng9IjEyIi8+Cjx0ZXh0IGNsYXNzPSJkdCBpbmsiIHg9IjIyNCIgeT0iMTUwIj48dHNwYW4gY2xhc3M9ImxhYiBtdXRlZCI+Q+G7rEEgVsOATzwvdHNwYW4+ICA8dHNwYW4gZm9udC13ZWlnaHQ9IjcwMCI+L2xpdmVzdHJlYW0tY2F0PC90c3Bhbj4gdHJvbmcgQ2xhdWRlIENvZGUgwrcgaG/hurdjIHdlYjogY2jhu41uIGtow7pjIOKGkiBj4bqvdCBjbGlwPC90ZXh0Pgo8dGV4dCBjbGFzcz0iZHQgbXV0ZWQiIHg9IjIyNCIgeT0iMTcxIj7EkOG6p3UgdsOgbzogZmlsZSBsaXZlIG1wNCArIHTDqm4gc2hvcCwgbG9nbyDCtyBi4buPIHRy4buRbmcgY8OidSBo4buPaSB0aMOsIG3DoXkgZMO5bmcgbeG6t2MgxJHhu4tuaDwvdGV4dD4KPHBhdGggY2xhc3M9ImxpbmUiIGQ9Ik00ODAgMTg0VjIwMiIgbWFya2VyLWVuZD0idXJsKCNhKSIvPgoKPCEtLSBCxrDhu5tjIDAgLS0+CjxyZWN0IGNsYXNzPSJjYXJkIiB4PSIyMDAiIHk9IjIwNCIgd2lkdGg9IjU2MCIgaGVpZ2h0PSI2MCIgcng9IjEyIi8+CjxjaXJjbGUgY2xhc3M9Im51bSIgY3g9IjIyOCIgY3k9IjIzNCIgcj0iMTUiLz48dGV4dCBjbGFzcz0idHQgbnVtLXQiIHg9IjIyOCIgeT0iMjM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4wPC90ZXh0Pgo8dGV4dCBjbGFzcz0idHQgaW5rIiB4PSIyNTYiIHk9IjIyOSI+SOG7j2kgMTAgY8OidSBt4buZdCBs4bqnbjwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IG11dGVkIiB4PSIyNTYiIHk9IjI1MSI+WMawbmcgaMO0LCB0w6puIFNQIGhheSDEkeG7jWMgc2FpLCBz4buRIHZpZGVvLCBjw6FjaCBjaGUgbuG7kWksIGdp4buNbmcgaG9zdDwvdGV4dD4KPHJlY3QgY2xhc3M9ImNsLWJnIiB4PSI2NDQiIHk9IjIxNiIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIyMCIgcng9IjEwIi8+PHRleHQgY2xhc3M9InBpbGwgY2wiIHg9IjY5NCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DTEFVREUgSOG7jkk8L3RleHQ+CjxwYXRoIGNsYXNzPSJsaW5lIiBkPSJNNDgwIDI2NFYyODYiIG1hcmtlci1lbmQ9InVybCgjYSkiLz4KCjwhLS0gQsaw4bubYyAxIC0tPgo8cmVjdCBjbGFzcz0iY2FyZCIgeD0iMjAwIiB5PSIyODgiIHdpZHRoPSI1NjAiIGhlaWdodD0iNjAiIHJ4PSIxMiIvPgo8Y2lyY2xlIGNsYXNzPSJudW0iIGN4PSIyMjgiIGN5PSIzMTgiIHI9IjE1Ii8+PHRleHQgY2xhc3M9InR0IG51bS10IiB4PSIyMjgiIHk9IjMyMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MTwvdGV4dD4KPHRleHQgY2xhc3M9InR0IGluayIgeD0iMjU2IiB5PSIzMTMiPlF1w6l0IHNvbmcgc29uZzwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IG11dGVkIiB4PSIyNTYiIHk9IjMzNSI+Q2jDqXAgbOG7nWksIOG6o25oIGdow6lwLCBuZ3V5w6puIGxp4buHdSwgbeG6q3UgZ2nhu41uZyDCtyB+MzEgcGjDunQgLyBsaXZlIDMgZ2nhu508L3RleHQ+CjxyZWN0IGNsYXNzPSJtYXktYmciIHg9IjY4NiIgeT0iMzAwIiB3aWR0aD0iNTgiIGhlaWdodD0iMjAiIHJ4PSIxMCIvPjx0ZXh0IGNsYXNzPSJwaWxsIG1heSIgeD0iNzE1IiB5PSIzMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk3DgVk8L3RleHQ+CjxwYXRoIGNsYXNzPSJsaW5lIiBkPSJNNDgwIDM0OFYzNzAiIG1hcmtlci1lbmQ9InVybCgjYSkiLz4KCjwhLS0gQsaw4bubYyAyIC0tPgo8cmVjdCBjbGFzcz0iY2FyZCIgeD0iMjAwIiB5PSIzNzIiIHdpZHRoPSI1NjAiIGhlaWdodD0iNjAiIHJ4PSIxMiIvPgo8Y2lyY2xlIGNsYXNzPSJudW0iIGN4PSIyMjgiIGN5PSI0MDIiIHI9IjE1Ii8+PHRleHQgY2xhc3M9InR0IG51bS10IiB4PSIyMjgiIHk9IjQwNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MjwvdGV4dD4KPHRleHQgY2xhc3M9InR0IGluayIgeD0iMjU2IiB5PSIzOTciPlNvw6F0IGNo4buvIG5naGUgbmjhuqdtPC90ZXh0Pgo8dGV4dCBjbGFzcz0iZHQgbXV0ZWQiIHg9IjI1NiIgeT0iNDE5Ij5T4butYSB0w6puIHPhuqNuIHBo4bqpbSwgeMawbmcgaMO0IOKAlCBjaOG7iSBz4butYSBraGkgMiBtw7QgaMOsbmggY8O5bmcgbmdoZSByYTwvdGV4dD4KPHJlY3QgY2xhc3M9Im1heS1iZyIgeD0iNjg2IiB5PSIzODQiIHdpZHRoPSI1OCIgaGVpZ2h0PSIyMCIgcng9IjEwIi8+PHRleHQgY2xhc3M9InBpbGwgbWF5IiB4PSI3MTUiIHk9IjM5OCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TcOBWTwvdGV4dD4KPHBhdGggY2xhc3M9ImxpbmUiIGQ9Ik00ODAgNDMyVjQ1NCIgbWFya2VyLWVuZD0idXJsKCNhKSIvPgoKPCEtLSBCxrDhu5tjIDMgLS0+CjxyZWN0IGNsYXNzPSJjYXJkIiB4PSIyMDAiIHk9IjQ1NiIgd2lkdGg9IjU2MCIgaGVpZ2h0PSI2MCIgcng9IjEyIi8+CjxjaXJjbGUgY2xhc3M9Im51bSIgY3g9IjIyOCIgY3k9IjQ4NiIgcj0iMTUiLz48dGV4dCBjbGFzcz0idHQgbnVtLXQiIHg9IjIyOCIgeT0iNDkxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4zPC90ZXh0Pgo8dGV4dCBjbGFzcz0idHQgaW5rIiB4PSIyNTYiIHk9IjQ4MSI+QuG6o24gxJHhu5MgbuG7mWkgZHVuZzwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IG11dGVkIiB4PSIyNTYiIHk9IjUwMyI+R+G6r24gbmjDo24gdOG7q25nIGPDonUsIMSR4bq/bSBsaXZlIHJhIMSRxrDhu6NjIGJhbyBuaGnDqnUgdmlkZW8ga2jDtG5nIHRyw7luZyDDvTwvdGV4dD4KPHJlY3QgY2xhc3M9Im1heS1iZyIgeD0iNjg2IiB5PSI0NjgiIHdpZHRoPSI1OCIgaGVpZ2h0PSIyMCIgcng9IjEwIi8+PHRleHQgY2xhc3M9InBpbGwgbWF5IiB4PSI3MTUiIHk9IjQ4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TcOBWTwvdGV4dD4KPHBhdGggY2xhc3M9ImxpbmUiIGQ9Ik00ODAgNTE2VjUzOCIgbWFya2VyLWVuZD0idXJsKCNhKSIvPgoKPCEtLSBD4buVbmcgMSAtLT4KPHJlY3QgY2xhc3M9ImdhdGUiIHg9IjIwMCIgeT0iNTQwIiB3aWR0aD0iNTYwIiBoZWlnaHQ9IjUyIiByeD0iMTIiLz4KPHRleHQgY2xhc3M9InR0IG5nIiB4PSIyMjQiIHk9IjU3MSI+Q+G7lE5HIDE8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJkdCBpbmsiIHg9IjMwMCIgeT0iNTcxIj5OZ8aw4budaSBkdXnhu4d0OiBjaOG7jW4gc+G6o24gcGjhuqltIC8gY2jhu6cgxJHhu4EsIHPhu5EgdmlkZW8gKOKJpCBz4buRIMO9KTwvdGV4dD4KPHBhdGggY2xhc3M9Imxvb3AiIGQ9Ik03NjAgNTY2SDgzMFY0ODZINzYyIiBtYXJrZXItZW5kPSJ1cmwoI3IpIi8+Cjx0ZXh0IGNsYXNzPSJzbWFsbCBsb29wLXQiIHg9IjgzOCIgeT0iNTMwIj5jaOG7jW4gbOG6oWk8L3RleHQ+CjxwYXRoIGNsYXNzPSJsaW5lIiBkPSJNNDgwIDU5MlY2MTQiIG1hcmtlci1lbmQ9InVybCgjYSkiLz4KCjwhLS0gQsaw4bubYyA0IC0tPgo8cmVjdCBjbGFzcz0iY2FyZCIgeD0iMjAwIiB5PSI2MTYiIHdpZHRoPSI1NjAiIGhlaWdodD0iNjAiIHJ4PSIxMiIvPgo8Y2lyY2xlIGNsYXNzPSJudW0iIGN4PSIyMjgiIGN5PSI2NDYiIHI9IjE1Ii8+PHRleHQgY2xhc3M9InR0IG51bS10IiB4PSIyMjgiIHk9IjY1MSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+NDwvdGV4dD4KPHRleHQgY2xhc3M9InR0IGluayIgeD0iMjU2IiB5PSI2NDEiPkvhu4tjaCBi4bqjbiBjw6J1IHRy4buNbiArIGdow6lwIGNsaXAgdGjDtDwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IG11dGVkIiB4PSIyNTYiIHk9IjY2MyI+Q2jhu41uIGtow7pjLCBnaMOpcCB0aMO0IOKAlCBtw6F5IGNo4bq3biBraMO6YyBj4bqvdCBnaeG7r2EgY8OidTwvdGV4dD4KPHJlY3QgY2xhc3M9ImNsLWJnIiB4PSI2MzYiIHk9IjYyOCIgd2lkdGg9IjEwOCIgaGVpZ2h0PSIyMCIgcng9IjEwIi8+PHRleHQgY2xhc3M9InBpbGwgY2wiIHg9IjY5MCIgeT0iNjQyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DTEFVREUgKyBNw4FZPC90ZXh0Pgo8cGF0aCBjbGFzcz0ibGluZSIgZD0iTTQ4MCA2NzZWNjk4IiBtYXJrZXItZW5kPSJ1cmwoI2EpIi8+Cgo8IS0tIELGsOG7m2MgNSAtLT4KPHJlY3QgY2xhc3M9ImNhcmQiIHg9IjIwMCIgeT0iNzAwIiB3aWR0aD0iNTYwIiBoZWlnaHQ9IjYwIiByeD0iMTIiLz4KPGNpcmNsZSBjbGFzcz0ibnVtIiBjeD0iMjI4IiBjeT0iNzMwIiByPSIxNSIvPjx0ZXh0IGNsYXNzPSJ0dCBudW0tdCIgeD0iMjI4IiB5PSI3MzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjU8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJ0dCBpbmsiIHg9IjI1NiIgeT0iNzI1Ij5DaGUgY2jhu5cgbuG7kWkgKyBsw6BtIDMgdmlkZW8gdGjhu608L3RleHQ+Cjx0ZXh0IGNsYXNzPSJkdCBtdXRlZCIgeD0iMjU2IiB5PSI3NDciPlRo4bq7IFNQIC8gaMOsbmggbWluaCBob+G6oSBjaGUg4omlIDAsNiBnacOieSBt4buXaSBiw6puIMK3IDMgdmlkZW8gxJFhIGThuqFuZzwvdGV4dD4KPHJlY3QgY2xhc3M9Im1heS1iZyIgeD0iNjg2IiB5PSI3MTIiIHdpZHRoPSI1OCIgaGVpZ2h0PSIyMCIgcng9IjEwIi8+PHRleHQgY2xhc3M9InBpbGwgbWF5IiB4PSI3MTUiIHk9IjcyNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TcOBWTwvdGV4dD4KPHBhdGggY2xhc3M9ImxpbmUiIGQ9Ik00ODAgNzYwVjc4MiIgbWFya2VyLWVuZD0idXJsKCNhKSIvPgoKPCEtLSBD4buVbmcgMiAtLT4KPHJlY3QgY2xhc3M9ImdhdGUiIHg9IjIwMCIgeT0iNzg0IiB3aWR0aD0iNTYwIiBoZWlnaHQ9IjUyIiByeD0iMTIiLz4KPHRleHQgY2xhc3M9InR0IG5nIiB4PSIyMjQiIHk9IjgxNSI+Q+G7lE5HIDI8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJkdCBpbmsiIHg9IjMwMCIgeT0iODE1Ij5OZ8aw4budaSBkdXnhu4d0IDMgdmlkZW8gdGjhu606IGzhu51pLCBjw6J1IG3hu58gxJHhuqd1LCBow6xuaCwgZ2nhu41uZzwvdGV4dD4KPHBhdGggY2xhc3M9Imxvb3AiIGQ9Ik03NjAgODEwSDgzMFY2NDZINzYyIiBtYXJrZXItZW5kPSJ1cmwoI3IpIi8+Cjx0ZXh0IGNsYXNzPSJzbWFsbCBsb29wLXQiIHg9IjgzOCIgeT0iNzI0Ij5z4butYSBr4buLY2ggYuG6o248L3RleHQ+Cjx0ZXh0IGNsYXNzPSJzbWFsbCBsb29wLXQiIHg9IjgzOCIgeT0iNzQwIj4vIGtodcO0bjwvdGV4dD4KPHBhdGggY2xhc3M9ImxpbmUiIGQ9Ik00ODAgODM2Vjg1OCIgbWFya2VyLWVuZD0idXJsKCNhKSIvPgoKPCEtLSBCxrDhu5tjIDYgLS0+CjxyZWN0IGNsYXNzPSJjYXJkIiB4PSIyMDAiIHk9Ijg2MCIgd2lkdGg9IjU2MCIgaGVpZ2h0PSI2MCIgcng9IjEyIi8+CjxjaXJjbGUgY2xhc3M9Im51bSIgY3g9IjIyOCIgY3k9Ijg5MCIgcj0iMTUiLz48dGV4dCBjbGFzcz0idHQgbnVtLXQiIHg9IjIyOCIgeT0iODk1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj42PC90ZXh0Pgo8dGV4dCBjbGFzcz0idHQgaW5rIiB4PSIyNTYiIHk9Ijg4NSI+xJBp4buBbiBj4bqjIGzDtDwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IG11dGVkIiB4PSIyNTYiIHk9IjkwNyI+xJBp4buBbiBs4bubcCBjaG8gY8OhYyB2aWRlbyBjw7JuIGzhuqFpLCBz4butYSB04bubaSBraGkgbcOheSBiw6FvIDAgbOG7l2k8L3RleHQ+CjxyZWN0IGNsYXNzPSJtYXktYmciIHg9IjY4NiIgeT0iODcyIiB3aWR0aD0iNTgiIGhlaWdodD0iMjAiIHJ4PSIxMCIvPjx0ZXh0IGNsYXNzPSJwaWxsIG1heSIgeD0iNzE1IiB5PSI4ODYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk3DgVk8L3RleHQ+CjxwYXRoIGNsYXNzPSJsaW5lIiBkPSJNNDgwIDkyMFY5NDIiIG1hcmtlci1lbmQ9InVybCgjYSkiLz4KCjwhLS0gQsaw4bubYyA3IC0tPgo8cmVjdCBjbGFzcz0iY2FyZCIgeD0iMjAwIiB5PSI5NDQiIHdpZHRoPSI1NjAiIGhlaWdodD0iNjAiIHJ4PSIxMiIvPgo8Y2lyY2xlIGNsYXNzPSJudW0iIGN4PSIyMjgiIGN5PSI5NzQiIHI9IjE1Ii8+PHRleHQgY2xhc3M9InR0IG51bS10IiB4PSIyMjgiIHk9Ijk3OSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+NzwvdGV4dD4KPHRleHQgY2xhc3M9InR0IGluayIgeD0iMjU2IiB5PSI5NjkiPkThu7FuZyArIGtp4buDbSBj4bqjIGzDtDwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IG11dGVkIiB4PSIyNTYiIHk9Ijk5MSI+TcOheSBk4buxbmcgfjU14oCTNjAgZ2nDonkgbeG7l2kgdmlkZW8gwrcgdOG7qyBjaOG7kWkgbuG6v3UgY+G7lW5nIGNoxrBhIGR1eeG7h3QgLyBraHXDtG4gxJHhu5VpPC90ZXh0Pgo8cmVjdCBjbGFzcz0ibWF5LWJnIiB4PSI2ODYiIHk9Ijk1NiIgd2lkdGg9IjU4IiBoZWlnaHQ9IjIwIiByeD0iMTAiLz48dGV4dCBjbGFzcz0icGlsbCBtYXkiIHg9IjcxNSIgeT0iOTcwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Nw4FZPC90ZXh0Pgo8cGF0aCBjbGFzcz0ibGluZSIgZD0iTTQ4MCAxMDA0VjEwMjYiIG1hcmtlci1lbmQ9InVybCgjYSkiLz4KCjwhLS0gQsaw4bubYyA4IC0tPgo8cmVjdCBjbGFzcz0iY2FyZCIgeD0iMjAwIiB5PSIxMDI4IiB3aWR0aD0iNTYwIiBoZWlnaHQ9IjYwIiByeD0iMTIiLz4KPGNpcmNsZSBjbGFzcz0ibnVtIiBjeD0iMjI4IiBjeT0iMTA1OCIgcj0iMTUiLz48dGV4dCBjbGFzcz0idHQgbnVtLXQiIHg9IjIyOCIgeT0iMTA2MyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+ODwvdGV4dD4KPHRleHQgY2xhc3M9InR0IGluayIgeD0iMjU2IiB5PSIxMDUzIj5HaWFvPC90ZXh0Pgo8dGV4dCBjbGFzcz0iZHQgbXV0ZWQiIHg9IjI1NiIgeT0iMTA3NSI+VGjGsCBt4bulYyBjaGlhIHPhursgKyBi4bqjbmcgbeG7kWMgZ2nhu50gwrcga2nhu4NtIGzhu51pIHF14bqjbmcgY8OhbyDEkeG7jyB0aMOsIGNo4bq3biBj4bqjIGzDtDwvdGV4dD4KPHJlY3QgY2xhc3M9Im1heS1iZyIgeD0iNjg2IiB5PSIxMDQwIiB3aWR0aD0iNTgiIGhlaWdodD0iMjAiIHJ4PSIxMCIvPjx0ZXh0IGNsYXNzPSJwaWxsIG1heSIgeD0iNzE1IiB5PSIxMDU0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Nw4FZPC90ZXh0Pgo8cGF0aCBjbGFzcz0ibGluZSIgZD0iTTQ4MCAxMDg4VjExMTAiIG1hcmtlci1lbmQ9InVybCgjYSkiLz4KCjwhLS0gQ+G7lW5nIDMgLS0+CjxyZWN0IGNsYXNzPSJnYXRlIiB4PSIyMDAiIHk9IjExMTIiIHdpZHRoPSI1NjAiIGhlaWdodD0iNTIiIHJ4PSIxMiIvPgo8dGV4dCBjbGFzcz0idHQgbmciIHg9IjIyNCIgeT0iMTE0MyI+Q+G7lE5HIDM8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJkdCBpbmsiIHg9IjMwMCIgeT0iMTE0MyI+TmfGsOG7nWkgeGVtIHThu6tuZyB2aWRlbyBjw7MgdGnhur9uZywgc+G7rWEgbOG6uyDigJQgbmfGsOG7nWkgdOG7sSDEkcSDbmc8L3RleHQ+CjxwYXRoIGNsYXNzPSJsb29wIiBkPSJNNzYwIDExMzhIODMwVjk3NEg3NjIiIG1hcmtlci1lbmQ9InVybCgjcikiLz4KPHRleHQgY2xhc3M9InNtYWxsIGxvb3AtdCIgeD0iODM4IiB5PSIxMDUyIj5k4buxbmcgbOG6oWk8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJzbWFsbCBsb29wLXQiIHg9IjgzOCIgeT0iMTA2OCI+dmlkZW8gbOG7l2k8L3RleHQ+CjxwYXRoIGNsYXNzPSJsaW5lIiBkPSJNNDgwIDExNjRWMTE4NiIgbWFya2VyLWVuZD0idXJsKCNhKSIvPgoKPCEtLSBCxrDhu5tjIDkgLS0+CjxyZWN0IGNsYXNzPSJjYXJkIiB4PSIyMDAiIHk9IjExODgiIHdpZHRoPSI1NjAiIGhlaWdodD0iNjAiIHJ4PSIxMiIvPgo8Y2lyY2xlIGNsYXNzPSJudW0iIGN4PSIyMjgiIGN5PSIxMjE4IiByPSIxNSIvPjx0ZXh0IGNsYXNzPSJ0dCBudW0tdCIgeD0iMjI4IiB5PSIxMjIzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj45PC90ZXh0Pgo8dGV4dCBjbGFzcz0idHQgaW5rIiB4PSIyNTYiIHk9IjEyMTMiPkdoaSBiw6BpIGjhu41jPC90ZXh0Pgo8dGV4dCBjbGFzcz0iZHQgbXV0ZWQiIHg9IjI1NiIgeT0iMTIzNSI+TOG7l2kgbeG7m2kg4oaSIGx14bqtdCBtw6F5IGtp4buDbSArIGLDoGkgdGVzdCwgZ+G7rWkgduG7gSByZXBvIGfhu5FjPC90ZXh0Pgo8cmVjdCBjbGFzcz0ibmctYmciIHg9IjY4NiIgeT0iMTIwMCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjIwIiByeD0iMTAiLz48dGV4dCBjbGFzcz0icGlsbCBuZyIgeD0iNzE1IiB5PSIxMjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5OR8av4bucSTwvdGV4dD4KCjwhLS0gTmjDoW5oIG5ndeG7k24ga2jDtG5nIHBo4bqjaSBsaXZlIC0tPgo8cGF0aCBjbGFzcz0iYnJhbmNoIiBkPSJNMjAwIDIzNEgxNDBWNjQ2SDE5OCIgbWFya2VyLWVuZD0idXJsKCNhKSIvPgo8dGV4dCBjbGFzcz0ic21hbGwgbXV0ZWQiIHg9IjEzMCIgeT0iNDA0IiB0ZXh0LWFuY2hvcj0iZW5kIj5OZ3Xhu5NuIGtow7RuZzwvdGV4dD4KPHRleHQgY2xhc3M9InNtYWxsIG11dGVkIiB4PSIxMzAiIHk9IjQyMCIgdGV4dC1hbmNob3I9ImVuZCI+cGjhuqNpIGxpdmUgKHZpZGVvPC90ZXh0Pgo8dGV4dCBjbGFzcz0ic21hbGwgbXV0ZWQiIHg9IjEzMCIgeT0iNDM2IiB0ZXh0LWFuY2hvcj0iZW5kIj5yZXZpZXcsIDEgbmfGsOG7nWk8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJzbWFsbCBtdXRlZCIgeD0iMTMwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJlbmQiPm7Ds2kgbGnhu4FuIG3huqFjaCk6PC90ZXh0Pgo8dGV4dCBjbGFzcz0ic21hbGwgaW5rIiB4PSIxMzAiIHk9IjQ2OCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC13ZWlnaHQ9IjcwMCI+YuG7jyBixrDhu5tjIDHigJMzPC90ZXh0PgoKPCEtLSDEkOG6p3UgcmEgKyBsdeG6rXQgY+G7qW5nIC0tPgo8cmVjdCBjbGFzcz0iY2FyZCIgeD0iNDAiIHk9IjEyNzYiIHdpZHRoPSI0MzAiIGhlaWdodD0iMTU2IiByeD0iMTIiLz4KPHRleHQgY2xhc3M9ImxhYiBtdXRlZCIgeD0iNjIiIHk9IjEzMDIiPsSQ4bqmVSBSQTwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IGluayIgeD0iNjIiIHk9IjEzMjgiPuKAoiBWaWRlbyBk4buNYyAxMDgww5cxOTIwLCBwaOG7pSDEkeG7gSAyIGTDsm5nLCB+4oiSMTQgTFVGUzwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IGluayIgeD0iNjIiIHk9IjEzNTAiPuKAoiBC4bqjbmcgbeG7kWMgZ2nhu50gZ+G7kWMgdHLDqm4gbGl2ZTwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IGluayIgeD0iNjIiIHk9IjEzNzIiPuKAoiBEYW5oIHPDoWNoIHPhuqNuIHBo4bqpbSBjaMawYSBjw7MgxJFv4bqhbjwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IGluayIgeD0iNjIiIHk9IjEzOTQiPuKAoiBC4bqjbmcga2nhu4NtIHThu6tuZyB2aWRlbzwvdGV4dD4KCjxyZWN0IGNsYXNzPSJjYXJkIiB4PSI0OTAiIHk9IjEyNzYiIHdpZHRoPSI0MzAiIGhlaWdodD0iMTU2IiByeD0iMTIiLz4KPHRleHQgY2xhc3M9ImxhYiBtdXRlZCIgeD0iNTEyIiB5PSIxMzAyIj5MVeG6rFQgQ+G7qE5HIOKAlCBNw4FZIENI4bq2TjwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IGluayIgeD0iNTEyIiB5PSIxMzI4Ij7igKIgTeG7l2kga2jDumMgbMOgIGPDonUgdHLhu41uPC90ZXh0Pgo8dGV4dCBjbGFzcz0iZHQgaW5rIiB4PSI1MTIiIHk9IjEzNTAiPuKAoiBDaOG7lyBu4buRaSBow6xuaCBjaGUg4omlIDAsNiBnacOieSBt4buXaSBiw6puPC90ZXh0Pgo8dGV4dCBjbGFzcz0iZHQgaW5rIiB4PSI1MTIiIHk9IjEzNzIiPuKAoiBDaHV54buDbiBj4bqjbmggbeG7nSBjaOG7k25nIOKJpSAwLDMgZ2nDonksIGPhuqVtIGNo4bubcDwvdGV4dD4KPHRleHQgY2xhc3M9ImR0IGluayIgeD0iNTEyIiB5PSIxMzk0Ij7igKIgS2jDtG5nIGThu7FuZyBj4bqjIGzDtCBraGkgY+G7lW5nIGNoxrBhIGR1eeG7h3Q8L3RleHQ+Cjx0ZXh0IGNsYXNzPSJkdCBpbmsiIHg9IjUxMiIgeT0iMTQxNiI+4oCiIEtp4buDbSBs4budaSBxdeG6o25nIGPDoW8gxJHhu48g4oaSIGNo4bq3biBj4bqjIGzDtDwvdGV4dD4KCjx0ZXh0IGNsYXNzPSJkdCBuZyIgeD0iNDAiIHk9IjE0NjAiIGZvbnQtd2VpZ2h0PSI3MDAiPk3DoXkgY2jhuqVtIMSR4bqhdCBjaMawYSDEkeG7pzogdOG7q25nIGPDsyBsw7QgbcOheSBjaOG6pW0gMjcvMjcgxJHhuqF0LCBuZ8aw4budaSB4ZW0gY2jhuqVtIDAvMjcg4oCUIGx1w7RuIHThu7EgeGVtIHZpZGVvIGPDsyB0aeG6v25nLjwvdGV4dD4KPHRleHQgY2xhc3M9InNtYWxsIG11dGVkIiB4PSI0MCIgeT0iMTQ4NCI+wqkgMjAyNiBBZ2VudCBWaWRlbyBHYmUgQUkgSHViPC90ZXh0Pgo8L3N2Zz4K" alt="Workflow Livestream v1: cửa vào, 10 bước từ 0 đến 9, 3 cổng người duyệt, vòng sửa khi chưa đạt, nhánh nguồn không phải live bỏ bước 1–3">
+    <p>Đọc từ trên xuống. Cổng chưa đạt thì quay lại theo mũi tên đỏ. Nguồn không phải live (video review, 1 người nói liền mạch) đi nhánh nét đứt: bỏ bước 1–3 và Cổng 1.</p>
+  </div>
+</section>
+
+<section id="p1-kien-thuc">
+  <h2>Kiến thức cốt lõi</h2>
+  <div class="grid">
+    <div class="card"><span class="num">1</span><b>Live là kho tài nguyên, không phải khuôn</b>
+      <p>Live 3 giờ mỗi ngày nên cảnh và lời gần như không cạn — tận dụng 15–20 video mỗi buổi. Trộn thêm video win, video tự quay, cảnh chèn, hình 2D/3D, nhất là đoạn nói công dụng. Khách đã xem live sẽ nhận ra cảnh: muốn mới thì đổi kịch bản, giọng hoặc cảnh.</p></div>
+    <div class="card"><span class="num">2</span><b>Trả lời 10 câu cho nhanh</b>
+      <p>Chat ngay từ đầu: sản phẩm gì, thị trường nào, cần gì. Hoặc gửi hồ sơ sản phẩm, bảo máy đọc hồ sơ có sẵn. Làm trên web thì máy biết ít hơn — điền lại thông tin sản phẩm, thương hiệu.</p></div>
+    <div class="card"><span class="num">3</span><b>Bản đồ nội dung là kho nguyên liệu</b>
+      <p>Máy gắn nhãn từng câu, đếm số ý không trùng → số video tối đa. Ở Cổng 1: số video ≤ số ý, và kiểm máy cắt đúng sản phẩm khi host nói đan xen.</p></div>
+    <div class="card hot"><span class="num">4</span><b>Cổng 2 là cổng quan trọng nhất</b>
+      <p>Máy dựng cả lô theo khuôn 3 video thử. Thử chỉ toàn cảnh live thì đừng duyệt — yêu cầu thêm cảnh chèn, hình minh hoạ ngay ở đây.</p></div>
+    <div class="card"><span class="num">5</span><b>Video cắt live thiếu CTA</b>
+      <p>Thêm CTA mới hay bị cụt, giọng hẫng. Yêu cầu máy thêm tiếng chuyển cảnh (SFX) hoặc âm thanh giảm dần trước CTA.</p></div>
+    <div class="card"><span class="num">6</span><b>Giọng đọc và clone giọng</b>
+      <p>Ghi rõ mô tả giọng: nam / nữ, vùng miền, tiếng Việt. Body giọng host + hook/CTA giọng clone nghe như 2 người → thử tạo giọng cả bài một lần. Clone phải chỉnh nhiều lần, ghi lại thiết lập. Chỉ clone giọng người đã đồng ý.</p></div>
+    <div class="card"><span class="num">7</span><b>Máy chấm đạt vẫn chưa đủ</b>
+      <p>Từng có lô máy chấm 27/27 đạt, người xem chấm 0/27. Tự xem từng video có tiếng, phản biện máy ở mọi khâu. Lô đầu sửa kỹ thì lô sau nhanh hơn.</p></div>
+    <div class="card"><span class="num">8</span><b>Quét lâu trên máy yếu</b>
+      <p>Live 3 giờ quét ~31 phút trên máy chuẩn; máy yếu có thể vài giờ. Cắt trước ~30 phút host nói hay, nói dài về công dụng — đủ ra ~5 video.</p></div>
+  </div>
+</section>
+
+<section id="p1-quy-trinh">
+  <h2>Quy trình từng bước</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Bước</th><th>Ai làm</th><th>Việc</th><th>Chưa đạt thì</th></tr></thead>
+    <tbody>
+      <tr><td>Cửa vào</td><td><span class="chip c-ng">Người</span></td><td>Gõ <code>/livestream-cat</code> trong Claude Code (hoặc web: chọn khúc → cắt clip). Gửi file live mp4, tên shop, logo.</td><td>Bổ sung file / thông tin</td></tr>
+      <tr><td>0 · Hỏi 10 câu</td><td><span class="chip c-cl">Claude</span></td><td>Xưng hô, tên sản phẩm hay đọc sai, số video, cách che nối, giọng host. Bỏ trống → máy dùng mặc định.</td><td>—</td></tr>
+      <tr><td>1 · Quét song song</td><td><span class="chip c-may">Máy</span></td><td>Chép lời, ảnh ghép, nguyên liệu, mẫu giọng. ~31 phút / live 3 giờ (tuỳ máy).</td><td>Máy yếu: cắt 30 phút chạy trước</td></tr>
+      <tr><td>2 · Soát chữ nghe nhầm</td><td><span class="chip c-may">Máy</span></td><td>Sửa tên sản phẩm, xưng hô — chỉ sửa khi 2 mô hình cùng nghe ra.</td><td>—</td></tr>
+      <tr><td>3 · Bản đồ nội dung</td><td><span class="chip c-may">Máy</span></td><td>Gắn nhãn từng câu, báo live ra được bao nhiêu video không trùng ý.</td><td>—</td></tr>
+      <tr class="cong"><td>Cổng 1</td><td><span class="chip c-ng">Người</span></td><td>Chọn sản phẩm / chủ đề, số video ≤ số ý; kiểm máy cắt đúng sản phẩm.</td><td>Chọn lại → bước 3</td></tr>
+      <tr><td>4 · Kịch bản câu trọn + ghép clip thô</td><td><span class="chip c-cl">Claude</span> <span class="chip c-may">Máy</span></td><td>Chọn khúc, ghép thô. Máy chặn khúc cắt giữa câu.</td><td>Máy chọn lại khúc</td></tr>
+      <tr><td>5 · Che chỗ nối + 3 video thử</td><td><span class="chip c-may">Máy</span></td><td>Thẻ sản phẩm / hình minh hoạ che ≥ 0,6 giây mỗi bên; dựng 3 video đa dạng.</td><td>—</td></tr>
+      <tr class="cong"><td>Cổng 2</td><td><span class="chip c-ng">Người</span></td><td>Duyệt kỹ lời, câu mở đầu, hình, giọng. Yêu cầu thêm cảnh chèn, hình minh hoạ, CTA mới, tiếng chuyển cảnh nếu cần.</td><td>Sửa kịch bản / khuôn → bước 4</td></tr>
+      <tr><td>6 · Điền cả lô</td><td><span class="chip c-may">Máy</span></td><td>Áp khuôn đã duyệt cho các video còn lại. Người báo trước số video, độ dài (vd 10 video, 50–60 giây).</td><td>Máy sửa tới 0 lỗi</td></tr>
+      <tr><td>7 · Dựng + kiểm cả lô</td><td><span class="chip c-may">Máy</span></td><td>Máy dựng ~55–60 giây mỗi video (thời gian chạy, không phải độ dài video).</td><td>Máy từ chối nếu cổng chưa duyệt / khuôn đổi</td></tr>
+      <tr><td>8 · Giao</td><td><span class="chip c-may">Máy</span></td><td>Thư mục chia sẻ + bảng mốc giờ gốc trên live.</td><td>Kiểm lời quảng cáo đỏ → chặn cả lô</td></tr>
+      <tr class="cong"><td>Cổng 3</td><td><span class="chip c-ng">Người</span></td><td>Xem từng video có bật tiếng, sửa lẻ, rồi tự đăng.</td><td>Dựng lại video lỗi → bước 7</td></tr>
+      <tr><td>9 · Ghi bài học</td><td><span class="chip c-ng">Người</span></td><td>Lỗi mới thành luật máy kiểm + bài test, gửi về repo gốc.</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="grid">
+    <div class="card"><span class="num">Đầu ra của 1 lô</span>
+      <ul>
+        <li>Video dọc 1080×1920, phụ đề 2 dòng, ~−14 LUFS</li>
+        <li>Bảng mốc giờ gốc của từng đoạn trên live</li>
+        <li>Danh sách sản phẩm chưa có đoạn phù hợp</li>
+        <li>Bảng kiểm từng video</li>
+      </ul></div>
+    <div class="card"><span class="num">Luật cứng — máy chặn</span>
+      <ul>
+        <li>Mỗi khúc cắt là câu trọn</li>
+        <li>Chỗ nối hình che ≥ 0,6 giây mỗi bên</li>
+        <li>Chuyển cảnh mờ chồng ≥ 0,3 giây, cấm chớp</li>
+        <li>Không dựng cả lô khi cổng chưa duyệt</li>
+        <li>Kiểm lời quảng cáo đỏ → chặn cả lô</li>
+      </ul></div>
+  </div>
+</section>
+
+<section id="p1-bai-tap">
+  <h2>Bài tập thực hành</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Bài</th><th>Việc cần làm</th><th>Khi nào</th><th>Đạt khi</th></tr></thead>
+    <tbody>
+      <tr><td>1 · Chạy lô thử</td><td>Cắt đoạn live ~30 phút, chạy từ bước 0 tới Cổng 3</td><td>Trong buổi (30 phút)</td><td>Có ít nhất 1 video hoàn chỉnh</td></tr>
+      <tr><td>2 · Duyệt Cổng 2 có ghi chú</td><td>Duyệt 3 video thử theo 4 mục: lời, câu mở đầu, hình, giọng; ghi rõ chỗ sửa</td><td>Lô đầu</td><td>Video thử có cảnh chèn / hình minh hoạ</td></tr>
+      <tr><td>3 · Thêm CTA mượt</td><td>Thêm CTA mới, yêu cầu tiếng chuyển cảnh hoặc âm giảm dần trước CTA</td><td>Lô đầu</td><td>Chuyển sang CTA không cụt</td></tr>
+      <tr><td>4 · Giọng cho cả bài</td><td>Kịch bản mới gồm câu mở + CTA, tạo giọng cả bài một lần; so với cách ghép body gốc</td><td>Trong tuần</td><td>Hook, body, CTA nghe như một người</td></tr>
+      <tr><td>5 · Ghi bài học</td><td>Chọn 1 lỗi mới gặp trong lô, ghi lại (bước 9)</td><td>Sau lô đầu</td><td>Bài học đã gửi về repo gốc</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="p1-tu-kiem">
+  <h2>Tự kiểm tra</h2>
+  <p class="lead">Tự trả lời trước, rồi bấm để xem đáp án.</p>
+  <div>
+    <details><summary>1. Workflow bắt đầu bằng lệnh nào, cần chuẩn bị gì?</summary><p><code>/livestream-cat</code> trong Claude Code (hoặc web: chọn khúc → cắt clip). Chuẩn bị file live mp4, tên shop, logo, hồ sơ sản phẩm, máy lên repo mới.</p></details>
+    <details><summary>2. Làm sao đỡ mất thời gian ở 10 câu hỏi?</summary><p>Chat trước sản phẩm và thị trường, gửi file thông tin sản phẩm, hoặc bảo máy đọc hồ sơ có sẵn.</p></details>
+    <details><summary>3. Bản đồ nội dung dùng để làm gì?</summary><p>Gắn nhãn từng câu, đếm số ý không trùng, báo live ra được bao nhiêu video — là kho nguyên liệu để làm video.</p></details>
+    <details><summary>4. Ở Cổng 1, số video bị giới hạn bởi gì?</summary><p>Số video phải ≤ số ý trong bản đồ nội dung.</p></details>
+    <details><summary>5. Vì sao Cổng 2 quan trọng nhất?</summary><p>Máy dựng cả lô theo khuôn 3 video thử; thử sai thì cả lô lặp lại lỗi đó.</p></details>
+    <details><summary>6. Che chỗ nối tối thiểu bao lâu?</summary><p>Ít nhất 0,6 giây mỗi bên.</p></details>
+    <details><summary>7. Nguồn là video review 1 người nói liền mạch thì bỏ bước nào?</summary><p>Bỏ bước 1–3 (và Cổng 1), đi thẳng từ bước 0 sang bước 4.</p></details>
+    <details><summary>8. Chuyển sang CTA bị cụt thì yêu cầu máy làm gì?</summary><p>Thêm tiếng chuyển cảnh (SFX) hoặc âm thanh giảm dần trước CTA.</p></details>
+    <details><summary>9. Vì sao giọng clone đọc tiếng Việt bị lơ lớ, tránh thế nào?</summary><p>Mô tả giọng thiếu ngôn ngữ nên máy nhầm sang tiếng Thái. Ghi rõ nam / nữ, vùng miền, tiếng Việt.</p></details>
+    <details><summary>10. Máy chấm 27/27 đạt thì đăng được chưa?</summary><p>Chưa. Từng có lô máy 27/27 mà người chấm 0/27 — phải tự xem từng video có bật tiếng.</p></details>
+  </div>
+</section>
+
+<section id="p1-checklist">
+  <h2>Checklist lô đầu tiên</h2>
+  <div class="check" data-luu="b1">
+    <label><input type="checkbox"><span>Đã cập nhật repo mới</span></label>
+    <label><input type="checkbox"><span>Đã có file live mp4, tên shop, logo, hồ sơ sản phẩm</span></label>
+    <label><input type="checkbox"><span>Đã trả lời 10 câu ở bước 0 (hoặc chat trước / gửi hồ sơ)</span></label>
+    <label><input type="checkbox"><span>Cổng 1: máy cắt đúng sản phẩm, số video ≤ số ý</span></label>
+    <label><input type="checkbox"><span>Cổng 2: duyệt kỹ 3 video thử — lời, câu mở đầu, hình, giọng</span></label>
+    <label><input type="checkbox"><span>Video thử có cảnh chèn / hình minh hoạ, CTA chuyển mượt</span></label>
+    <label><input type="checkbox"><span>Đã báo máy số video và độ dài trước khi điền cả lô</span></label>
+    <label><input type="checkbox"><span>Cổng 3: xem từng video có bật tiếng, sửa lẻ</span></label>
+    <label><input type="checkbox"><span>Đã tự đăng video</span></label>
+    <label><input type="checkbox"><span>Đã ghi ít nhất 1 bài học gửi về repo gốc</span></label>
+  </div>
+  <p class="note">Đang chờ bổ sung: lựa chọn cảnh bắt buộc (host cầm sản phẩm, cận tay test sản phẩm). Trong lúc chờ, ghi yêu cầu này vào chat ngay từ đầu — máy lấy thêm cảnh từ kho video win để chèn.</p>
+</section>
+
+</div>
+
+<!-- ============ PHẦN 2 ============ -->
+<div class="panel" id="phan-2" role="tabpanel" aria-labelledby="tab-2">
+
+<div class="phan">
+  <span class="lab">Phần 2</span>
+  <h2>Chữa video cắt live</h2>
+  <p>Máy cắt nhanh, nhưng máy chấm đạt vẫn chưa đủ: từng có lô máy chấm 27/27 đạt mà người xem chấm 0/27.
+  Nhân viên là người duyệt ở 3 cổng — soát lỗi, nói cho Claude sửa, rồi mới cho đi tiếp.</p>
+</div>
+
+<nav class="mini" aria-label="Mục phần 2">
+  <a href="#p2-nhac-lai">Nhắc lại</a><a href="#p2-cong">3 cổng</a><a href="#p2-loi">Lỗi hay gặp</a>
+  <a href="#p2-sua">Cách sửa</a><a href="#p2-checklist">Checklist duyệt</a>
+</nav>
+
+<section id="p2-nhac-lai">
+  <h2>Nhắc lại nhanh</h2>
+  <div class="grid">
+    <div class="card"><span class="num">Trong Claude Code</span><b>Gõ <code>/livestream-cat</code></b>
+      <p>Đưa file live mp4 (tải về máy) + tên shop + logo. Claude đi đúng 10 bước, dừng ở 3 cổng cho mình duyệt.</p></div>
+    <div class="card"><span class="num">Trên trang công cụ</span><b>Chọn khúc → cắt clip</b>
+      <p>2 công cụ của quy trình Livestream. Web biết ít hơn, nên điền lại thông tin sản phẩm và thương hiệu.</p></div>
+    <div class="card"><span class="num">Bước 0 · phiếu 10 câu</span><b>Trả lời một lần cho nhanh</b>
+      <p>Chat trước: sản phẩm gì, thị trường nào, cần gì. Hoặc gửi hồ sơ sản phẩm / bảo máy đọc hồ sơ có sẵn.</p></div>
+    <div class="card"><span class="num">Máy yếu</span><b>Cắt trước 30 phút live</b>
+      <p>Quét live 3 giờ có máy mất vài giờ. Chạy thử đoạn ~30 phút host nói hay, nói dài về công dụng — đủ ra ~5 video.</p></div>
+  </div>
+</section>
+
+<section id="p2-cong">
+  <h2>3 cổng duyệt — sửa càng sớm càng rẻ</h2>
+  <div class="grid">
+    <div class="card"><span class="num">Cổng 1 · bản đồ nội dung</span><b>Chọn sản phẩm, số video</b>
+      <p>Số video ≤ số ý máy báo. Host nói đan xen nhiều sản phẩm → kiểm máy cắt đúng sản phẩm mình chọn.</p></div>
+    <div class="card hot"><span class="num">Cổng 2 · 3 video thử — quan trọng nhất</span><b>Duyệt lời, câu mở đầu, hình, giọng</b>
+      <p>Máy dựng cả lô theo khuôn 3 video thử: thử sai thì cả lô sai y hệt. Máy không cho dựng cả lô khi cổng này chưa duyệt.</p></div>
+    <div class="card"><span class="num">Cổng 3 · bản giao</span><b>Xem từng video có tiếng, sửa lẻ</b>
+      <p>Video nằm trên thư mục chia sẻ kèm bảng mốc giờ gốc. Máy không tự đăng — người đăng là nhân viên.</p></div>
+  </div>
+</section>
+
+<section id="p2-loi">
+  <h2>Lỗi hay gặp</h2>
+  <div class="grid">
+    <div class="card hot"><span class="num">Top 1</span><b>Hình đơn điệu</b><p>Chỉ cảnh live thu nhỏ trên nền một màu.</p></div>
+    <div class="card hot"><span class="num">Top 2</span><b>Thiếu CTA / CTA cụt</b><p>Chuyển từ lời live sang lời kêu gọi mua bị hẫng.</p></div>
+    <div class="card hot"><span class="num">Top 3</span><b>Giọng bị lạc</b><p>Hook, CTA khác giọng body; giọng clone đọc lơ lớ.</p></div>
+  </div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Lỗi</th><th>Cách nhận ra</th><th>Cách sửa</th></tr></thead>
+    <tbody>
+      <tr class="nhom"><td colspan="3">Cổng 1 · bản đồ nội dung</td></tr>
+      <tr><td>Cắt nhầm sang sản phẩm khác</td>
+        <td>Host nói đan xen (vd kem trị mụn xen tẩy da chết). Xem nhãn sản phẩm máy gắn.</td>
+        <td>Chọn lại sản phẩm / chủ đề. Sản phẩm được nói ít thì ra ít video.</td></tr>
+      <tr><td>Đòi nhiều video hơn số ý</td>
+        <td>Máy cảnh báo số video &gt; số ý.</td>
+        <td>Giảm số video cho ≤ số ý.</td></tr>
+
+      <tr class="nhom"><td colspan="3">Cổng 2 · 3 video thử</td></tr>
+      <tr><td>Hình đơn điệu, toàn cảnh live trên nền một màu</td>
+        <td>Video thử không có cảnh chèn, hình minh hoạ.</td>
+        <td>Không duyệt. Yêu cầu thêm cảnh chèn, hình minh hoạ 2D/3D, video tự quay, video win — nhất là đoạn nói công dụng.</td></tr>
+      <tr><td>Chuyển sang CTA bị cụt, giọng hẫng</td>
+        <td>Nghe đoạn cuối: lời live dừng rồi CTA bật lên đột ngột.</td>
+        <td>Yêu cầu thêm tiếng chuyển cảnh (SFX) hoặc âm thanh giảm dần trước CTA.</td></tr>
+      <tr><td>Hook, CTA khác giọng body — như 2 người</td>
+        <td>Body giữ giọng thật của host, hook và CTA dùng giọng clone.</td>
+        <td>Viết kịch bản mới gồm cả câu mở và CTA, tạo giọng cho cả bài một lần (cách đang thử, chưa chốt).</td></tr>
+      <tr><td>Giọng clone đọc tiếng Việt lơ lớ</td>
+        <td>Mô tả giọng thiếu ngôn ngữ, máy nhầm sang tiếng Thái.</td>
+        <td>Ghi rõ trong mô tả giọng: nam / nữ, vùng miền, tiếng Việt.</td></tr>
+      <tr><td>Câu cụt, nội dung "cục"</td>
+        <td>Đọc liền toàn văn: cắt ở dấu phẩy, mở bằng "cho nên / tại vì" khi vế trước bị bỏ, đảo nhân quả.</td>
+        <td>Báo Claude chọn lại khúc là câu trọn. Máy chặn cắt giữa câu, mạch cả video thì người soát.</td></tr>
+      <tr><td>Lộ chỗ nối: host nhảy tư thế, hình "bóng ma"</td>
+        <td>Xem kỹ chỗ 2 khúc live xa nhau ghép lại.</td>
+        <td>Che bằng thẻ sản phẩm / hình minh hoạ ≥ 0,6 giây mỗi bên.</td></tr>
+      <tr><td>Chữ, số trên thẻ mà host không nói</td>
+        <td>So từng thẻ với lời host.</td>
+        <td>Bỏ chữ / số đó. Không tự thêm %.</td></tr>
+      <tr><td>Sai tên sản phẩm, sai xưng hô</td>
+        <td>Vừa nghe vừa đọc phụ đề.</td>
+        <td>Báo Claude sửa chữ. Lần sau ghi sẵn vào phiếu 10 câu.</td></tr>
+      <tr><td>Lời cấm, khen tuyệt đối, giá, deal, tên khách</td>
+        <td>Đọc toàn văn lời + cảnh báo kiểm lời quảng cáo.</td>
+        <td>Cắt câu hoặc chọn khúc khác. Trước–sau chỉ dùng khi host có nói.</td></tr>
+      <tr><td>Lộ chữ khuyến mãi in sẵn, bình luận, mặt khách</td>
+        <td>Mở ảnh khung hình.</td>
+        <td>Báo Claude đổi khung hoặc chọn khúc khác.</td></tr>
+      <tr><td>Logo, câu mở khó đọc; phụ đề đè thẻ</td>
+        <td>Xem ảnh khung cỡ điện thoại.</td>
+        <td>Báo Claude sửa cỡ chữ, màu, vị trí ở bản thử.</td></tr>
+
+      <tr class="nhom"><td colspan="3">Điền cả lô</td></tr>
+      <tr><td>Lỗi video thử lặp lại ở mọi video</td>
+        <td>Cổng 2 duyệt hời hợt.</td>
+        <td>Sửa kỹ 3 video thử (ít nhất video đầu) rồi mới cho điền cả lô.</td></tr>
+      <tr><td>Ít phần thân, cảnh lặp lại giữa các video</td>
+        <td>Máy chỉ lấy vài đoạn quen thuộc.</td>
+        <td>Nhắc máy dùng nhiều phần thân khác nhau từ bản đồ nội dung. Báo trước số video và độ dài (vd 10 video, 50–60 giây).</td></tr>
+
+      <tr class="nhom"><td colspan="3">Cổng 3 · bản giao</td></tr>
+      <tr><td>Lẫn người dẫn khác</td>
+        <td>Xem khung: áo, tóc, bối cảnh khác. Máy chưa tự dò.</td>
+        <td>Bỏ khúc đó.</td></tr>
+      <tr><td>Máy chấm đạt hết nhưng xem thấy không dùng được</td>
+        <td>Máy không đánh giá được cảm nhận khi xem.</td>
+        <td>Tự xem từng video có bật tiếng; dựng lại video lỗi.</td></tr>
+
+      <tr class="nhom"><td colspan="3">Máy chặn / máy chậm</td></tr>
+      <tr><td>Quét bước 1 mất hàng giờ</td>
+        <td>Máy cấu hình yếu, file live quá dài.</td>
+        <td>Cắt trước đoạn ~30 phút host nói hay, chạy thử trên máy mình.</td></tr>
+      <tr><td>Máy từ chối dựng cả lô</td>
+        <td>Cổng chưa duyệt, hoặc khuôn đổi sau khi duyệt.</td>
+        <td>Duyệt đủ cổng. Đổi khuôn thì duyệt lại 3 video thử.</td></tr>
+      <tr><td>Cả lô bị chặn ở bước giao</td>
+        <td>Kiểm lời quảng cáo báo đỏ.</td>
+        <td>Sửa câu vi phạm trong kịch bản rồi chạy lại.</td></tr>
+      <tr><td>Chớp hình, tiếng nhỏ</td>
+        <td>Máy kiểm báo lỗi.</td>
+        <td>Không giao. Chuyển cảnh chỉ mờ chồng từ 0,3 giây.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="p2-sua">
+  <h2>Cách sửa — 7 nguyên tắc</h2>
+  <ul class="rules">
+    <li><b>Nói bằng lời với Claude, ghi rõ chỗ:</b> "video 2, giây 12 lộ chỗ nối — che bằng thẻ sản phẩm".</li>
+    <li><b>Dồn sức vào Cổng 2:</b> thêm cảnh chèn, hình minh hoạ, CTA mới, tiếng chuyển cảnh ngay ở đây thì cả lô mới có.</li>
+    <li><b>Không sửa khuôn chung khi lô đang dựng</b> — đợi lô xong rồi sửa.</li>
+    <li><b>Không bịa:</b> chữ, số, công dụng chỉ lấy từ lời host.</li>
+    <li><b>Chỉ clone giọng người đã đồng ý.</b> Giọng KOL / KOC / host ngoài công ty: hỏi leader trước khi đăng.</li>
+    <li><b>Phản biện máy ở mọi khâu</b> và báo đúng số video đạt — live ít ý thì ra ít video.</li>
+    <li><b>Ghi bài học:</b> lỗi mới ghi lại để thành luật máy tự kiểm; lô đầu sửa kỹ thì lô sau nhanh hơn.</li>
+  </ul>
+  <p class="warn">Máy chấm đạt chưa phải là xong. Luôn mở ảnh khung hình và xem video có tiếng trước khi cho qua cổng.</p>
+</section>
+
+<section id="p2-checklist">
+  <h2>Checklist duyệt</h2>
+  <p class="lead">Tick đủ mới cho qua cổng. Ô nào không đạt → quay lại bảng lỗi.</p>
+  <div class="check">
+    <p class="eyebrow">Cổng 1 · bản đồ nội dung</p>
+    <label><input type="checkbox"><span>Đã trả lời phiếu 10 câu (hoặc chat trước / gửi hồ sơ sản phẩm)</span></label>
+    <label><input type="checkbox"><span>Máy cắt đúng sản phẩm đã chọn</span></label>
+    <label><input type="checkbox"><span>Số video không vượt số ý máy báo</span></label>
+    <p class="eyebrow">Cổng 2 · 3 video thử</p>
+    <label><input type="checkbox"><span>Có cảnh chèn / hình minh hoạ, không chỉ toàn cảnh live</span></label>
+    <label><input type="checkbox"><span>Chuyển sang CTA mượt (tiếng chuyển cảnh hoặc âm giảm dần)</span></label>
+    <label><input type="checkbox"><span>Giọng hook, body, CTA nghe như một người; giọng clone đúng tiếng Việt, đúng vùng miền</span></label>
+    <label><input type="checkbox"><span>Đọc liền toàn văn: câu trọn, mạch không cục</span></label>
+    <label><input type="checkbox"><span>Không lời cấm, khen tuyệt đối, giá, deal, tên khách; số trên thẻ có trong lời host</span></label>
+    <label><input type="checkbox"><span>Mọi chỗ nối được che, không "bóng ma"</span></label>
+    <label><input type="checkbox"><span>Câu mở đầu, logo đọc được cỡ điện thoại; phụ đề không đè thẻ</span></label>
+    <p class="eyebrow">Trước khi điền cả lô</p>
+    <label><input type="checkbox"><span>Đã báo máy số video và độ dài mong muốn</span></label>
+    <p class="eyebrow">Cổng 3 · bản giao</p>
+    <label><input type="checkbox"><span>Đã xem hết từng video có bật tiếng (không chỉ xem ảnh)</span></label>
+    <label><input type="checkbox"><span>Các video dùng phần thân khác nhau, không lặp cảnh</span></label>
+    <label><input type="checkbox"><span>Không lẫn người dẫn khác; màu, logo, CTA đúng shop</span></label>
+    <label><input type="checkbox"><span>Lỗi mới đã ghi bài học</span></label>
+  </div>
+</section>
+
+</div>
+
+<footer>© 2026 Agent Video Gbe AI Hub</footer>
+</div>
+<script>
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  function panelCua(t){return document.getElementById(t.getAttribute('aria-controls'));}
+  function chon(id,cuon){
+    tabs.forEach(function(t){
+      var on=t.getAttribute('aria-controls')===id;
+      t.classList.toggle('on',on);
+      t.setAttribute('aria-selected',on?'true':'false');
+      panelCua(t).classList.toggle('on',on);
+    });
+    if(cuon){window.scrollTo(0,0);}
+  }
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){chon(t.getAttribute('aria-controls'),true);});
+  });
+  function theoHash(){
+    var h=decodeURIComponent((location.hash||'').slice(1));
+    if(!h){return;}
+    var el=document.getElementById(h);
+    if(!el){return;}
+    var p=el.classList.contains('panel')?el:el.closest('.panel');
+    if(!p){return;}
+    chon(p.id,false);
+    if(el!==p){el.scrollIntoView();}
+  }
+  theoHash();
+  window.addEventListener('hashchange',theoHash);
+})();
+</script>
+</body>
+</html>
